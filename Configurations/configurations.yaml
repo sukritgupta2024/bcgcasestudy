@@ -1,0 +1,26 @@
+DATA_DIRECTORY: Resources
+DATA_SOURCE: Resources/Source/Data.zip
+
+INPUT_FILES:
+  Charges: Data/Charges_use.csv
+  Damages: Data/Damages_use.csv
+  Endorse: Data/Endorse_use.csv
+  Primary_Person: Data/Primary_Person_use.csv
+  Units: Data/Units_use.csv
+  Restrict: Data/Restrict_use.csv
+
+OUTPUT_FILES:
+  Analysis1: Output/Analysis1
+  Analysis2: Output/Analysis2
+  Analysis3: Output/Analysis3
+  Analysis4: Output/Analysis4
+  Analysis5: Output/Analysis5
+  Analysis6: Output/Analysis6
+  Analysis7: Output/Analysis7
+  Analysis8: Output/Analysis8
+  Analysis9: Output/Analysis9
+  Analysis10: Output/Analysis10
+
+OUTPUT_FORMAT: parquet
+
+CODES_TO_IGNORE: ['NA','Unknown','Other','UN', 'OTHER  (EXPLAIN IN NARRATIVE)', 'UNKNOWN', 'NULL', 'NOT REPORTED']

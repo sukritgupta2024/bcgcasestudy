@@ -38,7 +38,7 @@ def ensure_all_data_is_present(directory, input_file_paths, zip_file):
     :param input_file_paths: path to all input files
     :param zip_file: path to zip file
     """
-
+    
     charges_file_path = input_file_paths.get('Charges')
     damages_file_path = input_file_paths.get('Damages')
     endorse_file_path = input_file_paths.get('Endorse')
@@ -50,16 +50,16 @@ def ensure_all_data_is_present(directory, input_file_paths, zip_file):
 
     if(not os.path.exists(directory+charges_file_path)):
         files_to_extract.append(charges_file_path)
-
+    
     if(not os.path.exists(directory+damages_file_path)):
         files_to_extract.append(damages_file_path)
-
+    
     if(not os.path.exists(directory+endorse_file_path)):
         files_to_extract.append(endorse_file_path)
-
+    
     if(not os.path.exists(directory+primary_file_path)):
         files_to_extract.append(primary_file_path)
-
+    
     if(not os.path.exists(directory+restrict_file_path)):
         files_to_extract.append(restrict_file_path)
 
@@ -80,5 +80,15 @@ def csv_to_dataframe(spark, file_path):
     :param spark: SparkSession object
     :param file_path: path to file
     """
-
+    
     return spark.read.option("inferSchema", "true").csv(file_path, header=True)
+
+def dataframe_to_parquet_output(df, file_path, file_format):
+    """
+    Saves the dataframe in specified format at the specified location
+    :param df: spark DataFrame object
+    :param file_path: path where the file will be saved
+    :param file_format: format in which the file will be saved
+    """
+
+    df.write.format(file_format).mode('overwrite').option('header', 'true').save(file_path)
