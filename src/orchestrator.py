@@ -10,6 +10,8 @@ class Orchestrator:
         configurations_path = 'Configurations/configurations.yaml'
         self.configurations = common_utilities.read_yaml_file(configurations_path)
 
+        self.logger.info('Checking Files...')
+        
         ## Ensure data directory is present
         common_utilities \
             .extract_zip_and_create_directory_if_not_exist(self.configurations.get('DATA_DIRECTORY'), \
