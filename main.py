@@ -5,7 +5,8 @@ import logging
 
 if __name__ == '__main__':
         
-    logging.basicConfig(level=logging.ERROR)
+    logging.basicConfig(level=logging.INFO)
+    logger = logging.getLogger('pyspark')
 
     spark = SparkSession \
             .builder \
@@ -14,4 +15,4 @@ if __name__ == '__main__':
     
     spark.sparkContext.setLogLevel("ERROR")
 
-    Orchestrator(spark)
+    Orchestrator(spark, logger)

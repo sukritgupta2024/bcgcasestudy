@@ -49,12 +49,7 @@ class USVehicleAccidentsCaseStudy:
         """
 
         result = self.df_units. \
-            filter(
-
-                col('VEH_BODY_STYL_ID'). \
-                contains('MOTORCYCLE')
-                
-                )
+            filter(col('VEH_BODY_STYL_ID').contains('MOTORCYCLE'))
         
         common_utilities.dataframe_to_parquet_output(result, self.output_file_paths.get('Analysis2'), self.output_format)
         return result.count()
@@ -131,7 +126,6 @@ class USVehicleAccidentsCaseStudy:
         :param self: class object
         """
 
-        # store = self.df_units.withColumn('TOT_INJRY_DEATH_CNT', col('TOT_INJRY_CNT')+col('DEATH_CNT')).groupBy('VEH_MAKE_ID').sum('TOT_INJRY_DEATH_CNT').withColumnRenamed('sum(TOT_INJRY_DEATH_CNT)', 'TOT_INJRY_DEATH_CNT_AGG').sort(col('TOT_INJRY_DEATH_CNT_AGG'), ascending=False)
         store = self.df_units \
                 .withColumn('TOT_INJRY_DEATH_CNT', col('TOT_INJRY_CNT')+col('DEATH_CNT')) \
                 .groupBy('VEH_MAKE_ID') \
@@ -193,10 +187,10 @@ class USVehicleAccidentsCaseStudy:
             filter(
             (
                     (self.df_units.VEH_DMAG_SCL_1_ID > "DAMAGED 4") &
-                    (~self.df_units.VEH_DMAG_SCL_1_ID.isin(["NA", "NO DAMAGE", "INVALID VALUE"]))
+                    (~self.df_units.VEH_DMAG_SCL_1_ID.isin([*self.codes_to_ignore, 'NO DAMAGE']))
             ) | (
                     (self.df_units.VEH_DMAG_SCL_2_ID > "DAMAGED 4") &
-                    (~self.df_units.VEH_DMAG_SCL_2_ID.isin(["NA", "NO DAMAGE", "INVALID VALUE"]))
+                    (~self.df_units.VEH_DMAG_SCL_2_ID.isin([*self.codes_to_ignore, 'NO DAMAGE']))
             )
         ). \
             filter(self.df_damages.DAMAGED_PROPERTY == "NONE"). \
@@ -224,7 +218,7 @@ class USVehicleAccidentsCaseStudy:
                     .collect()]
 
         top_10_used_vehicle_colors = [row[0] for row in self.df_units
-                    .filter(self.df_units.VEH_COLOR_ID != "NA")
+                    .filter(~self.df_units.VEH_COLOR_ID.isin(self.codes_to_ignore))
                     .groupby("VEH_COLOR_ID")
                     .count()
                     .orderBy(col("count").desc())

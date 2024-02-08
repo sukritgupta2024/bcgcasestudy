@@ -3,10 +3,10 @@ from src.analyzer import USVehicleAccidentsCaseStudy
 
 
 class Orchestrator:
-    def __init__(self,spark):
+    def __init__(self,spark, logger):
         
         self.spark = spark
-
+        self.logger = logger
         configurations_path = 'Configurations/configurations.yaml'
         self.configurations = common_utilities.read_yaml_file(configurations_path)
 
@@ -21,6 +21,8 @@ class Orchestrator:
                                         self.configurations.get('DATA_SOURCE'))    
 
         self.case_study = USVehicleAccidentsCaseStudy(self.configurations, self.spark)
+
+        self.logger.info('Starting Analysis...')
         self.run_analyzer()
         self.codes_to_ignore = self.configurations.get('CODES_TO_IGNORE')
 
@@ -44,6 +46,13 @@ class Orchestrator:
         ]
 
         for i, method in enumerate(analysis_methods, start=1):
-            analysis_result += f'Analysis {i}. {method()}\n'
-
+            try:
+                self.logger.info(f'Started Analysis number: {i}')
+                analysis_result += f'Analysis {i}. {method()}\n'
+            except Exception as e:
+                self.logger.error(f'Something went wrong with Analysis {i}: {e.args[0]}')
+            finally:
+                self.logger.info(f'Completed Analysis number: {i}')
+        
+        self.logger.info(f'Completed Analysis...')
         print(analysis_result)
