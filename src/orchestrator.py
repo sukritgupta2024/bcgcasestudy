@@ -14,14 +14,16 @@ class Orchestrator:
         common_utilities \
             .extract_zip_and_create_directory_if_not_exist(self.configurations.get('DATA_DIRECTORY'), \
                                                         self.configurations.get('DATA_SOURCE'))
-
+        ## Ensure that all the files are present
         common_utilities. \
             ensure_all_data_is_present(self.configurations.get('DATA_DIRECTORY'), \
                                        self.configurations.get('INPUT_FILES'), \
                                         self.configurations.get('DATA_SOURCE'))    
 
+        
         self.case_study = USVehicleAccidentsCaseStudy(self.configurations, self.spark)
 
+        ## Call the analyzer function to call the analysis function from the case study class
         self.logger.info('Starting Analysis...')
         self.run_analyzer()
         self.codes_to_ignore = self.configurations.get('CODES_TO_IGNORE')
